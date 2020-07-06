@@ -9,24 +9,25 @@ const isarray = (arr,el) => {
     }
 }
 
-const propsaq = (className, id, style) => {
-    let props = {};
-    props.className = className;
-    props.id = id;
-    props.style = style;
-    for (let key in props){
-        if (props[key] == undefined){
-            delete props[key];
-        }
-    }
-    return props;
-}
+// const propsaq = (...kids) => {
+//     let props = {};
+//     props.className = className;
+//     props.id = id;
+//     props.style = style;
+//     for (let key in props){
+//         if (props[key] == undefined){
+//             delete props[key];
+//         }
+//     }
+//     return props;
+// }
 
-const createEl = (tag = "div", props = { style: { color: "black" }, text: "text"}, ...children) => { //rewrite props aquisition
-    const el = document.createElement(tag);
+const createEl = (tag = "div", props = { style: { color: "black" }, text: "text"}
+, ...children) => { //rewrite props aquisition
     if (typeof(tag) == "function"){
         return tag(props);
     }
+    const el = document.createElement(tag);
     for (let key in props){
         if(key == "className") {
             el.setAttribute("class",props[key]);
@@ -42,16 +43,63 @@ const createEl = (tag = "div", props = { style: { color: "black" }, text: "text"
                     }} else {
                         el.setAttribute("style",props[key])
             }
+        } else {
+            el.setAttribute(key, props[key]);
         }
     }
-    isarray(children, el);
+    for (let smol in children){
+        
+    }
     return el;
 }
 
 const ToDo = ({list}) => {
-    return(createEl("div", "", 
-        ...list.map(data => {
-            createEl("todo", data)
-        })
-    ));
+    const temp = (createEl("div", {className : "border", style : "color: red;"}, 
+            ...list.map(data => {
+                createEl("todo", data);
+            })
+        ));
+    for (let item in list){
+        temp.appendChild(createEl("todo", list[item]));
+    }
+
+    temp.appendChild(createEl("button",{text : "salam", onclick: `palundra()`}));
+    return temp;
+};
+
+const palundra = () => {
+    alert("salam!");
+}
+
+
+// console.log(
+//     document.body.append(createEl(
+//         ToDo, 
+//         {
+//             list: [
+//                 {
+//                     id: "i3",
+//                     text: "Abc"
+//                 },
+//                 {
+//                     id: "i4",
+//                     text: "<h3>cba</h3>"
+//                 }
+//             ]
+//         }
+// ))
+// )
+
+const createT = () => {
+    document.body.append(createEl(
+        ToDo, 
+        {
+            list: [
+                {
+                    id: "i4",
+                    text: `<h3>${document.getElementById("sub").value}</h3>`
+                }
+            ]
+        }
+))
 }
